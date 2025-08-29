@@ -2,7 +2,7 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(200).send('ok');
   try {
     const body = req.body || {};
-    const event = body.event || body.type || body?.event?.type || 'event';
+    const eventName = (typeof body.event === "string" ? body.event : (body?.event?.type || body.type)) || "event";
     const productId = body.product_id || body.productId || body.productIdentifier || body?.event?.product_identifier;
     const env = body.environment || body.env || body?.event?.environment;
     const country = body.country || body.countryCode || body?.event?.country_code;
@@ -12,7 +12,7 @@ export default async function handler(req, res) {
     const rcEventTimestamp = body.occurred_at_ms || body?.event?.event_timestamp_ms || body?.event?.occurred_at_ms;
 
     const lines = [
-      `RevenueCat: ${event}`,
+      `RevenueCat: ${eventName}`,
       productId && `Product: ${productId}`,
       price != null && `Price: ${price}${currency ? ' ' + currency : ''}`,
       env && `Env: ${env}`,
